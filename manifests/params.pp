@@ -77,7 +77,7 @@ class ipaclient::params {
   }
 
   # Name of IPA package to install
-  case $facts['os']['familu'] {
+  case $facts['os']['family'] {
     'RedHat': {
       case $facts['os']['name'] {
         'fedora': {
