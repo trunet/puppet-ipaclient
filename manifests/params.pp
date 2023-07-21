@@ -34,19 +34,19 @@ class ipaclient::params {
   # RHEL 6.6 includes automatic sudo configuration
   # RHEL 7.0 requires manual confifuration
   # RHEL >=7.1 includes automatic sudo configuration
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'Fedora': {
-          if (versioncmp($::operatingsystemrelease, '21') >= 0) {
+          if (versioncmp($facts['os']['release']['full'], '21') >= 0) {
             $needs_sudo_config = false
           } else {
             $needs_sudo_config = true
           }
         }
         default: {
-          if (versioncmp($::operatingsystemrelease, '6.6') >= 0) {
-            if (versioncmp($::operatingsystemrelease, '7.0') == 0) {
+          if (versioncmp($facts['os']['release']['full'], '6.6') >= 0) {
+            if (versioncmp($facts['os']['release']['full'], '7.0') == 0) {
               $needs_sudo_config = true
             } else {
               $needs_sudo_config = false
@@ -58,9 +58,9 @@ class ipaclient::params {
       }
     }
     'Debian': {
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'Ubuntu': {
-          if (versioncmp($::operatingsystemrelease, '15.04') > 0) {
+          if (versioncmp($facts['os']['release']['full'], '15.04') > 0) {
             $needs_sudo_config = false
           } else {
             $needs_sudo_config = true
@@ -72,14 +72,14 @@ class ipaclient::params {
       }
     }
     default: {
-      fail("This module does not support operatingsystem ${::operatingsystem}")
+      fail("This module does not support operatingsystem ${facts['os']['name']}")
     }
   }
 
   # Name of IPA package to install
-  case $::osfamily {
+  case $facts['os']['familu'] {
     'RedHat': {
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'fedora': {
           $package = 'freeipa-client'
         }
@@ -92,7 +92,7 @@ class ipaclient::params {
         $package = 'freeipa-client'
     }
     default: {
-      fail("This module does not support operatingsystem ${::operatingsystem}")
+      fail("This module does not support operatingsystem ${facts['os']['name']}")
     }
   }
 }

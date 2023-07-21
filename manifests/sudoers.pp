@@ -33,14 +33,14 @@ class ipaclient::sudoers (
   if !empty($server) and !empty($domain) {
     $realm = upcase($domain)
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'RedHat': {
 
-        if ($::operatingsystem == 'Fedora' and
-          versioncmp($::operatingsystemrelease, '20') >= 0) {
+        if ($facts['os']['name'] == 'Fedora' and
+          versioncmp($facts['os']['release']['full'], '20') >= 0) {
             $libsss_sudo_package = []
-        } elsif ($::operatingsystem != 'Fedora' and
-            versioncmp($::operatingsystemrelease, '6.6') >= 0) {
+        } elsif ($facts['os']['name'] != 'Fedora' and
+            versioncmp($facts['os']['release']['full'], '6.6') >= 0) {
             $libsss_sudo_package = []
         } else {
             $libsss_sudo_package = 'libsss_sudo'
@@ -96,16 +96,16 @@ class ipaclient::sudoers (
 
     # Selecting the right provider is a PITA
     if empty($::sssd_version) {
-      case $::osfamily {
+      case $facts['os']['family'] {
         RedHat: {
-          if (versioncmp($::operatingsystemrelease, '6.6') >= 0) {
+          if (versioncmp($facts['os']['release']['full'], '6.6') >= 0) {
             $ipa_provider = 'ipa'
           } else {
             $ipa_provider = 'ldap'
           }
         }
         Debian: {
-          if (versioncmp($::operatingsystemrelease, '14.04') >= 0 and
+          if (versioncmp($facts['os']['release']['full'], '14.04') >= 0 and
             $::operatingsystem == 'Ubuntu') {
             $ipa_provider = 'ipa'
           } else {
