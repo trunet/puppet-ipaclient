@@ -117,7 +117,7 @@ class ipaclient (
     ensure => installed,
   }
 
-  if !str2bool($::ipa_enrolled) {
+  if !str2bool($facts.get('ipa_enrolled', false)) {
     if empty($password) {
       fail('Require at least a join password')
     } else {
